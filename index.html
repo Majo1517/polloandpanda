@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panda Rescata al Pollo 🐼🐥</title>
+    <title>Rescata al Pollo 🐼🐥</title>
     <style>
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: Arial, sans-serif;
             text-align: center;
             background-color: #fadbeb;
             overflow: hidden;
@@ -15,7 +15,7 @@
         .game-container {
             position: relative;
             width: 100%;
-            height: 500px;
+            height: 350px;
             background: #ffff;
             border: 5px solid #ff85a2;
             overflow: hidden;
@@ -47,7 +47,7 @@
         .coupon-container {
             display: none;
             position: fixed;
-            top: 50%;
+            top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
             background: #ff85a2;
@@ -147,25 +147,25 @@
                 let heartTop = parseInt(window.getComputedStyle(heart).getPropertyValue("top"));
                 let heartLeft = parseInt(window.getComputedStyle(heart).getPropertyValue("left"));
                 let basketLeft = parseInt(window.getComputedStyle(basket).getPropertyValue("left"));
-
-                if (heartTop >= 450) { // Si el corazón cae al nivel del canasto
-                    if (Math.abs(heartLeft - basketLeft) < 40) { // Si está dentro del canasto
+            
+                if (heartTop >= 320) { // Reduce la altura de captura
+                    if (Math.abs(heartLeft - basketLeft) < 30) { // Aumenta el margen de captura
                         heartCount++;
                         heartCountText.innerText = heartCount;
                         heart.remove();
                         clearInterval(fallInterval);
-
+                        
                         if (heartCount === 5) {
                             panda.innerHTML = "🐼";
-                            coupon.style.display = "block"; // Muestra la tarjeta del cupón
-                            gameActive = false; // Detener el juego
+                            coupon.style.display = "block"; 
+                            gameActive = false;
                         }
                     } else {
                         heart.remove();
                         clearInterval(fallInterval);
                     }
                 } else {
-                    heart.style.top = heartTop + 5 + "px";
+                    heart.style.top = heartTop + 5 + "px"; // Reduce la velocidad de caída
                 }
             }, 50);
         }
