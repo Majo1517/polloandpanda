@@ -3,62 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego del Panda y el Pollo 💛</title>
+    <title>Panda Rescata al Pollo 🐼🐥</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
             text-align: center;
-            background-color: #fcf6c3;
+            background-color: #fadbeb;
+            overflow: hidden;
         }
+        h1 { color: #d63384; }
         .game-container {
-            margin-top: 50px;
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: #ffff;
+            border: 5px solid #ff85a2;
+            overflow: hidden;
+            margin: auto;
+            max-width: 400px;
+            border-radius: 10px;
         }
         .panda {
-            font-size: 80px;
-            cursor: pointer;
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 60px;
         }
-        .heart-count {
-            font-size: 24px;
-            margin-top: 10px;
+        .basket {
+            font-size: 40px;
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
         }
-        .coupon {
+        .heart {
+            position: absolute;
+            top: 0;
+            font-size: 30px;
+            animation: fall 3s linear forwards;
+        }
+        /* 🎟️ Estilos del Cupón */
+        .coupon-container {
             display: none;
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #ff4081;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ff85a2;
             color: white;
-            font-size: 20px;
-            border-radius: 10px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+            width: 250px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .coupon-container button {
+            background: white;
+            color: #d63384;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .coupon-container button:hover {
+            background: #d63384;
+            color: white;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
 <body>
 
-    <h1>🐼💛 Juego del Panda y el Pollo 🐥</h1>
-    <p>¡Toca el panda para recolectar 2 corazones y ganar un cupón especial!</p>
+    <h1>🐼💛 Rescata al Pollo 🐥</h1>
+    <p>¡Mueve el panda con su canasto para atrapar 5 corazones y salvar al pollo!</p>
 
-    <div class="game-container">
-        <div class="panda" onclick="collectHeart()">🐼</div>
-        <p class="heart-count">Corazones: <span id="heartCount">0</span> / 2 ❤️</p>
-        <div class="coupon" id="coupon">
-            🎉 ¡Felicidades! Aquí está tu cupón: <br>  
-            <strong>🌟 Un antojito especial por tus vacaciones 🌟</strong>
-        </div>
+    <div class="game-container" id="gameContainer">
+        <div class="panda" id="panda">🐼</div>
+        <div class="basket" id="basket">🧺</div>
+    </div>
+    <p>Corazones atrapados: <span id="heartCount">0</span> / 5 💛</p>
+
+    <!-- 🎟️ Tarjeta del Cupón -->
+    <div class="coupon-container" id="coupon">
+        <h2>🎉 ¡Cupón Ganado!</h2>
+        <p>🐼💛🐥 Rescataste al pollo y ganaste un premio especial.</p>
+        <p><strong>🌟 Cupón: Un antojito especial por tus vacaciones  🌟</strong></p>
+        <button onclick="closeCoupon()">Cerrar</button>
     </div>
 
     <script>
-        let hearts = 0;
+        const panda = document.getElementById("panda");
+        const basket = document.getElementById("basket");
+        const gameContainer = document.getElementById("gameContainer");
+        const heartCountText = document.getElementById("heartCount");
+        const coupon = document.getElementById("coupon");
+        let heartCount = 0;
+        let pandaPosition = 50;
+        let gameActive = true;
 
-        function collectHeart() {
-            if (hearts < 1) {
-                hearts++;
-                document.getElementById("heartCount").innerText = hearts;
-            } else {
-                document.getElementById("heartCount").innerText = "2";
-                document.querySelector(".panda").style.display = "none";
-                document.getElementById("coupon").style.display = "block";
+        function movePanda(dir) {
+            if (dir === "left" && pandaPosition > 0) {
+                pandaPosition -= 10;
+            } else if (dir === "right" && pandaPosition < 90) {
+                pandaPosition += 10;
             }
+            panda.style.left = pandaPosition + "%";
+            basket.style.left = pandaPosition + "%";
         }
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "ArrowLeft") movePanda("left");
+            if (event.key === "ArrowRight") movePanda("right");
+        });
+
+        gameContainer.addEventListener("touchstart", (event) => {
+            const touchX = event.touches[0].clientX;
+            if (touchX < window.innerWidth / 2) {
+                movePanda("left");
+            } else {
+                movePanda("right");
+            }
+        });
+
+        function spawnHeart() {
+            if (!gameActive) return;
+
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerHTML = "💛";
+            heart.style.left = Math.random() * 90 + "%";
+            heart.style.position = "absolute";
+            heart.style.top = "0px";
+            gameContainer.appendChild(heart);
+
+            let fallInterval = setInterval(() => {
+                let heartTop = parseInt(window.getComputedStyle(heart).getPropertyValue("top"));
+                let heartLeft = parseInt(window.getComputedStyle(heart).getPropertyValue("left"));
+                let basketLeft = parseInt(window.getComputedStyle(basket).getPropertyValue("left"));
+
+                if (heartTop >= 450) { // Si el corazón cae al nivel del canasto
+                    if (Math.abs(heartLeft - basketLeft) < 40) { // Si está dentro del canasto
+                        heartCount++;
+                        heartCountText.innerText = heartCount;
+                        heart.remove();
+                        clearInterval(fallInterval);
+
+                        if (heartCount === 5) {
+                            panda.innerHTML = "🐼";
+                            coupon.style.display = "block"; // Muestra la tarjeta del cupón
+                            gameActive = false; // Detener el juego
+                        }
+                    } else {
+                        heart.remove();
+                        clearInterval(fallInterval);
+                    }
+                } else {
+                    heart.style.top = heartTop + 5 + "px";
+                }
+            }, 50);
+        }
+
+        function closeCoupon() {
+            coupon.style.display = "none";
+        }
+
+        setInterval(spawnHeart, 1500);
     </script>
 
 </body>
