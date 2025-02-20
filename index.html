@@ -6,6 +6,12 @@
     <title>Rescata al Pollo 🐼🐥</title>
     <style>
         body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Ocupa toda la altura de la pantalla */
+            margin: 0;
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #fadbeb;
@@ -14,15 +20,21 @@
         h1 { color: #d63384; }
         .game-container {
             position: relative;
-            width: 100%;
+            width: 90%; /* Reduce el ancho para dejar espacio */
+            max-width: 400px;
             height: 350px;
             background: #ffff;
             border: 5px solid #ff85a2;
             overflow: hidden;
-            margin: auto;
-            max-width: 400px;
             border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 10px; /* Espaciado interno */
+            margin: 0 auto; /* Centra horizontalmente */
+            box-sizing: border-box; /* Asegura que el padding no altere el tamaño */
         }
+        
         .panda {
             position: absolute;
             bottom: 50px;
@@ -81,7 +93,7 @@
 </head>
 <body>
 
-    <h1>🐼💛 Rescata al Pollo 🐥</h1>
+    <h1>¡Rescata al Pollo 🐥!</h1>
     <p>¡Mueve el panda con su canasto para atrapar 5 corazones y salvar al pollo!</p>
 
     <div class="game-container" id="gameContainer">
@@ -175,6 +187,36 @@
         }
 
         setInterval(spawnHeart, 1500);
+
+        document.addEventListener("touchstart", (event) => {
+            event.preventDefault(); // Evita zoom al tocar varias veces
+        }, { passive: false });
+        
+        let isDragging = false;
+        
+        panda.addEventListener("touchstart", (event) => {
+            isDragging = true;
+        });
+        
+        document.addEventListener("touchmove", (event) => {
+            if (!isDragging) return;
+        
+            let touchX = event.touches[0].clientX;
+            let containerRect = gameContainer.getBoundingClientRect();
+            let newLeft = ((touchX - containerRect.left) / containerRect.width) * 100;
+        
+            // Restringir el movimiento dentro del área de juego
+            if (newLeft < 5) newLeft = 5;
+            if (newLeft > 95) newLeft = 95;
+        
+            panda.style.left = newLeft + "%";
+            basket.style.left = newLeft + "%";
+        });
+        
+        document.addEventListener("touchend", () => {
+            isDragging = false;
+        });
+        
     </script>
 
 </body>
