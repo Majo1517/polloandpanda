@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego del Panda y el Pollo 💛</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #fcf6c3;
+        }
+        .game-container {
+            margin-top: 50px;
+        }
+        .panda {
+            font-size: 80px;
+            cursor: pointer;
+        }
+        .heart-count {
+            font-size: 24px;
+            margin-top: 10px;
+        }
+        .coupon {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ff4081;
+            color: white;
+            font-size: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🐼💛 Juego del Panda y el Pollo 🐥</h1>
+    <p>¡Toca el panda para recolectar 2 corazones y ganar un cupón especial!</p>
+
+    <div class="game-container">
+        <div class="panda" onclick="collectHeart()">🐼</div>
+        <p class="heart-count">Corazones: <span id="heartCount">0</span> / 2 ❤️</p>
+        <div class="coupon" id="coupon">
+            🎉 ¡Felicidades! Aquí está tu cupón: <br>  
+            <strong>🌟 Un antojito especial por tus vacaciones 🌟</strong>
+        </div>
+    </div>
+
+    <script>
+        let hearts = 0;
+
+        function collectHeart() {
+            if (hearts < 1) {
+                hearts++;
+                document.getElementById("heartCount").innerText = hearts;
+            } else {
+                document.getElementById("heartCount").innerText = "2";
+                document.querySelector(".panda").style.display = "none";
+                document.getElementById("coupon").style.display = "block";
+            }
+        }
+    </script>
+
+</body>
+</html>
